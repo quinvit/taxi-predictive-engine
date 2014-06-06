@@ -1,0 +1,30 @@
+{
+  "name": "taxi-predictive-engine",
+  "version": "0.0.1",
+  "description": "Predictive engine for GrapTaxi",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha specs/* -R nyan -u bdd"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:quinvit/aenm.git"
+  },
+  "author": "Qui.Nguyen <quinvit@yahoo.com>",
+  "license": "BSD-2-Clause",
+  "bugs": {
+    "url": "https://github.com/quinvit/aenm/issues"
+  },
+  "dependencies": {
+    "node-persist": "~0.0.x",
+    "redis": "~0.10.x" 
+  },
+  "devDependencies": {
+    "mocha": "~1.18.x",
+    "should": "~3.3.x",
+    "supertest": "~0.12.x"
+  },
+  "engines": {
+    "node": ">= 0.8"
+  }
+}
