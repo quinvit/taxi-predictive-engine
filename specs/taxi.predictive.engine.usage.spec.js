@@ -1,9 +1,9 @@
 var should = require('should');
 var redisManager = require('../index');
 
-describe('When using the Redis client manager', function() {
+describe('When using the taxi predictive engine', function() {
 
-  var key = 'redisclientmanager:test';
+  var key = 'taxipredictiveengine:test';
 
   beforeEach(function(done) {
     redisClient = redisManager.getClient();

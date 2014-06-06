@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "node-persist": "~0.0.x",
+    "node-mysql": "0.3.x",
     "redis": "~0.10.x" 
   },
   "devDependencies": {

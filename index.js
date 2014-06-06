@@ -3,32 +3,10 @@ Copyright (c) Qui.Nguyen
 Author: Qui.Nguyen <quinvit@yahoo.com>
 */
 (function () {
-  var redis, redisClient;
-
-  redis = require('redis');
-  redisClient = null;
-
-  function gracefulExit(options, err) {
-    if (options.cleanup) {
-      // Check if the connection exist before quitting
-      if (redisClient != null) {
-        redisClient.quit();
-      }
-    }
-
-    if (err) {
-      console.log(err.stack);
-    }
-
-    if (options.exit) {
-      process.exit();
-    }
-  }
-
-  // Handle processes signals
-  process.on('exit', gracefulExit.bind(null, { cleanup : true }));
-  process.on('SIGINT', gracefulExit.bind(null, { exit : true }));
-  process.on('uncaughtException', gracefulExit.bind(null, { exit : true }));
+	var redisManager = require('redis-client-manager');
+	var redisClient = redisManager.getClient();
+	
+	redisClient.lpush('hello_queue', 'world');
 
   // Function to get the connection, if the connection exist returns the connection.
   // If it doesn't exist, create a new connection
