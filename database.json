@@ -1,0 +1,30 @@
+{
+  "default": "dev",
+
+  "dev": {
+    "driver": "mysql",
+    "user": "root",
+    "password": "sudo",
+    "database": "taxi_booking"
+  },
+
+  "test": {
+    "driver": "mysql",
+    "user": "test",
+    "password": "sudo",
+    "database": "taxi_booking"
+  },
+
+  "prod": {
+    "driver": "mysql",
+    "user": "crawler",
+    "password": "sudo",
+    "database": "taxi_booking"
+    "pooling": {
+      "name": "taxiPool",
+      "max": 2,
+      "min": 1,
+      "idleTimeoutMillis": 30000
+    }
+  }
+}

@@ -8,17 +8,18 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:quinvit/aenm.git"
+    "url": "git@github.com:quinvit/taxi-predictive-engine.git"
   },
   "author": "Qui.Nguyen <quinvit@yahoo.com>",
   "license": "BSD-2-Clause",
   "bugs": {
-    "url": "https://github.com/quinvit/aenm/issues"
+    "url": "https://github.com/quinvit/taxi-predictive-engine/issues"
   },
   "dependencies": {
     "node-persist": "~0.0.x",
     "node-mysql": "0.3.x",
-    "redis": "~0.10.x" 
+    "redis": "~0.10.x",
+    "node-schedule": "0.1.x"
   },
   "devDependencies": {
     "mocha": "~1.18.x",

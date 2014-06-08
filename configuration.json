@@ -1,0 +1,10 @@
+{
+	"taxi_less_supply_high_demand": {
+		"booking_rate": 5,
+		"time_range": 30,
+		"available_taxis": 2,
+		"search_range": 1,
+		"notify_range": 5
+	},
+	"predict_interval": 1
+}

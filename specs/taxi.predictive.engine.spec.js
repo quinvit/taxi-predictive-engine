@@ -1,12 +1,12 @@
 /*
-Copyright (c) MyTeksi GrabTaxi 2013
-Author: Fadrizul Hasani <fadrizul@gmail.com>
+Copyright (c) Qui.Nguyen 2014
+Author: Qui.Nguyen <quinvit@yahoo.com>
 */
 (function () {
-  var should, redisManager;
+  var should, engine;
 
   should = require('should');
-  redisManager = require('../index');
+  engine = require('../index');
 
   describe('When call the manager to get the redis client', function () {
     before(function (done) {

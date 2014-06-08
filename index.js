@@ -2,21 +2,33 @@
 Copyright (c) Qui.Nguyen
 Author: Qui.Nguyen <quinvit@yahoo.com>
 */
-(function () {
-	var redisManager = require('redis-client-manager');
-	var redisClient = redisManager.getClient();
-	
-	redisClient.lpush('hello_queue', 'world');
 
-  // Function to get the connection, if the connection exist returns the connection.
-  // If it doesn't exist, create a new connection
-  // Take in options for the port & host
-  exports.getClient = function (opts) {
-    var opts = opts || {};
-    if (redisClient === null) {
-      redisClient = redis.createClient(opts.redisPort, opts.redisHost);
-    }
-    return redisClient;
-  };
+(function () {
+
+	var events = require('events');
+	var util = require('util');
+
+	var config = require('./configuration');
+	
+	var interval = config.predict_interval || 1; // In minutes
+	var scheduler = require('./lib/scheduler')(interval);
+	
+	var Engine = function(){
+		var self = this;
+		
+		self.start = function(){
+			scheduler.on('data', function(data){
+				// Transform data to message
+				var message = data; // Some stuff...
+				self.emit('message', message);
+			});
+			
+			var taxi_less_supply_high_demand = require('./queries/taxi_less_supply_high_demand')(config.taxi_less_supply_high_demand);
+			scheduler.start(taxi_less_supply_high_demand);
+		};
+	};
+	
+	util.inherits(Engine, events.EventEmitter);
+	module.exports = new Engine();
 
 }).call(this);
