@@ -5,7 +5,7 @@
 --Specification
 --Predict each t minutes
 --Query which position that "has high booking rate > m in the past 
---at current time (around p minutes)" and 2."less available taxis < n"
+--at current time (around p minutes)" and "less available taxis < n"
 --1. high booking rate >= 5 same week day & same time (near p minutes) in the past
 --2. less available taxis <= 2 at that area within 1km radius
 --3. notify taxis within 5km radius
