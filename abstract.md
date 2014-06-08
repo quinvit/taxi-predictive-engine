@@ -29,7 +29,7 @@ areas
 	-longitude
 	
 
---Assume position(x, y) will be a cell(30x30) in a grid.
+--Assume position(x, y) will be a cell(1km x 1km) in a grid.
 
 taxi_positions
 	-taxi_id
