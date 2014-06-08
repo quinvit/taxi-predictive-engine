@@ -148,6 +148,57 @@ LOCK TABLES `taxis` WRITE;
 INSERT INTO `taxis` VALUES (1,'0001'),(2,'0002'),(3,'0003'),(4,'0004'),(5,'0005');
 /*!40000 ALTER TABLE `taxis` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Dumping routines for database 'taxi_booking'
+--
+/*!50003 DROP PROCEDURE IF EXISTS `taxi_less_supply_high_demand` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `taxi_less_supply_high_demand`()
+BEGIN
+SELECT taxi_positions.taxi_id,
+       areas.area_id
+FROM areas
+LEFT JOIN taxi_positions ON taxi_positions.latitude < areas.latitude + 5 #radius of 5km
+AND taxi_positions.latitude > areas.latitude - 5
+AND taxi_positions.longitude < areas.longitude + 5
+AND taxi_positions.longitude > areas.longitude - 5
+WHERE areas.area_id IN
+    ( SELECT area_id
+     FROM
+       ( SELECT count(taxi_positions.taxi_id) AS available_taxis,
+                areas.area_id
+        FROM areas
+        LEFT JOIN taxi_positions ON taxi_positions.latitude < areas.latitude + 1 #radius of 1km
+        AND taxi_positions.latitude > areas.latitude - 1
+        AND taxi_positions.longitude < areas.longitude + 1
+        AND taxi_positions.longitude > areas.longitude - 1
+        AND areas.area_id IN
+          ( SELECT area_id
+           FROM
+             ( SELECT count(1) AS number_of_booking,
+                      bookings.area_id
+              FROM bookings
+              WHERE booking_time < NOW()
+                AND DAYOFWEEK(booking_time) = DAYOFWEEK(NOW())
+                AND HOUR(booking_time) = HOUR(NOW())
+                AND MINUTE(booking_time) < MINUTE(NOW()) + 30 ) a #around 30 minutes later
+           WHERE number_of_booking > 2 ) ) b
+     WHERE available_taxis < 2 );
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -158,4 +209,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-06-09  0:06:31
+-- Dump completed on 2014-06-09  0:31:17

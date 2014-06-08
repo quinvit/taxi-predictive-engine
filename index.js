@@ -37,6 +37,10 @@ Author: Qui.Nguyen <quinvit@yahoo.com>
 				
 			});
 			
+			scheduler.on('error', function(error){
+				self.emit('error', error);
+			});
+			
 			scheduler.start();
 		};
 		
