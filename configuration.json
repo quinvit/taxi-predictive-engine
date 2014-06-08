@@ -1,6 +1,7 @@
 {
 	"default": "dev",
 	"dev": {
+			"query": "taxi_less_supply_high_demand",
 			"taxi_less_supply_high_demand": {
 				"booking_rate": 5,
 				"time_range": 30,
@@ -8,7 +9,7 @@
 				"search_range": 1,
 				"notify_range": 5
 			},
-			"predict_interval": 1,
+			"predict_interval": 10000,
 			"redis_connection": {
 				"redisPort": null,
 				"redisHost": null

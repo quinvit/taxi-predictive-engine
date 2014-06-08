@@ -1,12 +1,15 @@
 var should = require('should');
 var engine = require('../index');
+var config = require('../configuration');
+config = config[config['default']];
+
+var redisManager = require('redis-client-manager');
 
 describe('When using the taxi predictive engine', function () {
 
-    var key = 'taxipredictiveengine:test';
-
     before(function (done) {
         engine = require('../index');
+        redisClient = redisManager.getClient(config.redis_connection);	
         engine.start();
         done();
     });
@@ -16,9 +19,16 @@ describe('When using the taxi predictive engine', function () {
         done();
     });
 
-    it('should have a message after one minute', function (done) {
+    it('should have a message in predictions Redis queue', function (done) {
         engine.on('message', function (message) {
-            done();
+        	redisClient.lpop(config.redis_queue, function(error, item){
+        		if (message != item) {
+        			throw error;
+        		}
+        		else { 
+        			done();
+        		}
+        	});
         });
     });
 });

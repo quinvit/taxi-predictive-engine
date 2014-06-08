@@ -4,7 +4,7 @@ Author: Qui.Nguyen <quinvit@yahoo.com>
 */
 
 (function () {
-  var persist = require('node-persist');
+  var persist = require('persist');
   var type = persist.type;
 	
   module.exports = function (opts) {

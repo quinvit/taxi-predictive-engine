@@ -4,38 +4,40 @@ Author: Qui.Nguyen <quinvit@yahoo.com>
 */
 
 (function () {
-
-	var events = require('events');
-	var util = require('util');
-	
-	var redisManager = require('redis-client-manager');
-	var redisClient = redisManager.getClient({
-		redisPort: 6379,
-		redisHost: 'localhost'
-	});
-	
+	// Load configuration
 	var config = require('./configuration');
 	config = config[config['default']];
+
+	var events = require('events'), 
+		util = require('util'),
+		redis = require('redis-client-manager').getClient(config.redis_connection);
 	
-	var interval = config.predict_interval || 1; // In minutes
-	var scheduler = require('./lib/scheduler')(interval);
+	// Schedule and interval query
+	var query = require('./queries/' + config.query)(config[config.query]);
+	var scheduler = require('./lib/scheduler')(query, config.predict_interval);
 	
 	var Engine = function(){
 		var self = this;
+		var emit_count = 0;
 		
 		self.start = function(){
 			scheduler.on('data', function(data){
 				// Transform data to message
 				var message = data; // Some stuff...
-				self.emit('message', message);
+
 				// Push to Redis queue
-				redisClient.lpush(config.message_queue || "predictions", message, function(error, numOfItems){
-					
+				redis.lpush(config.redis_queue || "predictions", message, function(error, numOfItems){
+					if(error){
+						throw error;
+					}
+					else {
+						self.emit('message', message);
+					}
 				});
+				
 			});
 			
-			var taxi_less_supply_high_demand = require('./queries/taxi_less_supply_high_demand')(config.taxi_less_supply_high_demand);
-			scheduler.start(taxi_less_supply_high_demand);
+			scheduler.start();
 		};
 		
 		self.stop = function(){

@@ -5,19 +5,21 @@ Author: Qui.Nguyen <quinvit@yahoo.com>
 
 (function () {
 
-	var events = require('events');
-	var util = require('util');
-	var schedule = require('node-persist');
+	var events = require('events'),
+		util = require('util'),
+		persist = require('persist');
 	
 	// Modeling
-	var Taxi = require('../models/taxi');
-	var Area = require('../models/area');
-	var Booking = require('../models/booking');
-	var Driver = require('../models/driver');
-	var Taxi_Position = require('../models/taxi_position');
+	var Taxi = require('../models/taxi'),
+		Area = require('../models/area'),
+		Booking = require('../models/booking'),
+		Driver = require('../models/driver'),
+		Taxi_Position = require('../models/taxi_position');
 	
 	var Query = function(opts){
-		this.run = function () {
+		var self = this;
+		
+		self.run = function () {
 
 			// Perform querying and emit event
 			/*
@@ -51,13 +53,20 @@ Author: Qui.Nguyen <quinvit@yahoo.com>
 						
 			*/
 			
-			// Fake result
-			var result = {
-				area: { area_id: 2 },
-				taxis_should_arrives: [ { taxi_id: 2 }, { taxi_id: 3 } ]
-			};
-			
-			this.emit('result', result);
+			persist.connect(function(error, connection){
+				if(error){
+					console.log(error);
+					return;
+				}
+				// Fake result
+				var data = {
+					error: 0,
+					area: { area_id: 23875 },
+					taxis_should_arrives: [ { taxi_id: 7833972 }, { taxi_id: 1659542 } ]
+				};
+				
+				self.emit('data', data);
+			});
 		};
 	};
 	

@@ -4,7 +4,7 @@
   "description": "Predictive engine for GrapTaxi",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --timeout 300000 specs/* -R nyan -u bdd"
+    "test": "mocha --timeout 120000 specs/* -R nyan -u bdd"
   },
   "repository": {
     "type": "git",
@@ -16,10 +16,10 @@
     "url": "https://github.com/quinvit/taxi-predictive-engine/issues"
   },
   "dependencies": {
-    "node-persist": "~0.0.x",
+    "persist": "0.2.x",
     "node-mysql": "0.3.x",
-    "redis": "~0.10.x",
-    "node-schedule": "0.1.x"
+    "mysql": "2.3.x",
+    "redis": "~0.10.x"
   },
   "devDependencies": {
     "mocha": "~1.18.x",
