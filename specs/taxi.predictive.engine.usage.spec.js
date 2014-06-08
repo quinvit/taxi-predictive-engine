@@ -1,40 +1,24 @@
 var should = require('should');
-var redisManager = require('../index');
+var engine = require('../index');
 
-describe('When using the taxi predictive engine', function() {
+describe('When using the taxi predictive engine', function () {
 
-  var key = 'taxipredictiveengine:test';
+    var key = 'taxipredictiveengine:test';
 
-  beforeEach(function(done) {
-    redisClient = redisManager.getClient();
-    done();
-  });
-
-  after(function(done) {
-    redisClient.quit();
-    done()
-  });
-
-  describe('When pushing a value to a list', function() {
-
-    beforeEach(function(done) {
-      redisClient.lpush(key, 'myValue', function(error, numOfItems) {
+    before(function (done) {
+        engine = require('../index');
+        engine.start();
         done();
-      });
     });
 
-    afterEach(function(done) {
-      redisClient.del(key, function(error, numOfItems) {
+    after(function (done) {
+        engine.stop();
         done();
-      });
     });
 
-    it('should have one item only', function(done) {
-      redisClient.lrange(key, 0, -1, function(error, items) {
-        items.length.should.equal(1);
-        done();
-      });
+    it('should have a message after one minute', function (done) {
+        engine.on('message', function (message) {
+            done();
+        });
     });
-
-  });
 });

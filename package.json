@@ -4,7 +4,7 @@
   "description": "Predictive engine for GrapTaxi",
   "main": "index.js",
   "scripts": {
-    "test": "mocha specs/* -R nyan -u bdd"
+    "test": "mocha --timeout 300000 specs/* -R nyan -u bdd"
   },
   "repository": {
     "type": "git",

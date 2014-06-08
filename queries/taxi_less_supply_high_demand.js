@@ -26,6 +26,29 @@ Author: Qui.Nguyen <quinvit@yahoo.com>
 				available_taxis: config.less_supply || 2, // but less number of available taxis
 				search_range: config.search_range || 1,	  // in 1km radius of the area
 				notify_range: config.notify_range || 5	  // notify taxis within 5km radius of the area
+				
+				// High demand
+				select area_id from (
+					select count(1) as number, bookings.area_id from bookings 
+										where 	booking_time < getdate()
+												and booking_time.weekday = getdate().weekday
+												and booking_time.hour = getdate().hour
+												and booking_time.minute < getdate().minute + 30
+				) where number > booking_rate
+				
+				// Low supply
+				select count(taxi_positions.taxi_id) as number, 
+					areas.area_id, 
+					taxi_positions.taxi_id from areas, taxi_positions
+						where 		taxi_positions.latitude < areas.latitude + 5
+								and taxi_positions.latitude > areas.latitude - 5
+								and taxi_positions.longitude < areas.longitude + 5
+								and taxi_positions.longitude > areas.longitude - 5
+								
+								and 
+				
+						
+						
 			*/
 			
 			// Fake result
