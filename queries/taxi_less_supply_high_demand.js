@@ -23,31 +23,44 @@ Author: Qui.Nguyen <quinvit@yahoo.com>
 
 			// Perform querying and emit event
 			/*
+
 				booking_rate: config.high_demand || 5, 	  // High number of bookings in the past
 				time_range: config.time_range || 30,	  // around 30 minutes from now
 				available_taxis: config.less_supply || 2, // but less number of available taxis
 				search_range: config.search_range || 1,	  // in 1km radius of the area
 				notify_range: config.notify_range || 5	  // notify taxis within 5km radius of the area
 				
-				// High demand
-				select area_id from (
-					select count(1) as number, bookings.area_id from bookings 
-										where 	booking_time < getdate()
-												and booking_time.weekday = getdate().weekday
-												and booking_time.hour = getdate().hour
-												and booking_time.minute < getdate().minute + 30
-				) where number > booking_rate
-				
-				// Low supply
-				select count(taxi_positions.taxi_id) as number, 
-					areas.area_id, 
-					taxi_positions.taxi_id from areas, taxi_positions
-						where 		taxi_positions.latitude < areas.latitude + 5
-								and taxi_positions.latitude > areas.latitude - 5
-								and taxi_positions.longitude < areas.longitude + 5
-								and taxi_positions.longitude > areas.longitude - 5
-								
-								and 
+
+
+				SELECT taxi_positions.taxi_id,
+				       areas.area_id
+				FROM areas
+				LEFT JOIN taxi_positions ON taxi_positions.latitude < areas.latitude + 5 #radius of 5km
+				AND taxi_positions.latitude > areas.latitude - 5
+				AND taxi_positions.longitude < areas.longitude + 5
+				AND taxi_positions.longitude > areas.longitude - 5
+				WHERE areas.area_id IN
+				    ( SELECT area_id
+				     FROM
+				       ( SELECT count(taxi_positions.taxi_id) AS available_taxis,
+				                areas.area_id
+				        FROM areas
+				        LEFT JOIN taxi_positions ON taxi_positions.latitude < areas.latitude + 1 #radius of 1km
+				        AND taxi_positions.latitude > areas.latitude - 1
+				        AND taxi_positions.longitude < areas.longitude + 1
+				        AND taxi_positions.longitude > areas.longitude - 1
+				        AND areas.area_id IN
+				          ( SELECT area_id
+				           FROM
+				             ( SELECT count(1) AS number_of_booking,
+				                      bookings.area_id
+				              FROM bookings
+				              WHERE booking_time < NOW()
+				                AND DAYOFWEEK(booking_time) = DAYOFWEEK(NOW())
+				                AND HOUR(booking_time) = HOUR(NOW())
+				                AND MINUTE(booking_time) < MINUTE(NOW()) + 30 ) a #around 30 minutes later
+				           WHERE number_of_booking > 2 ) ) b
+				     WHERE available_taxis < 2 )
 				
 						
 						
