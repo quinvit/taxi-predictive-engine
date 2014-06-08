@@ -18,7 +18,6 @@ Author: Qui.Nguyen <quinvit@yahoo.com>
 	
 	var Engine = function(){
 		var self = this;
-		var emit_count = 0;
 		
 		self.start = function(){
 			scheduler.on('data', function(data){
