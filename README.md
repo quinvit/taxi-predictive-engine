@@ -5,10 +5,12 @@ Predictive engine for GrapTaxi
 
 ### Usage
 ```
+
+// See configuration.json
+
 var engine = require('taxi-predictive-engine');
-engine.on("message", function(predictions){
-	console.log(predictions);
-	// push to Redis queue
+engine.on("message", function(prediction){
+	console.log(prediction);
 });
 
 ```
